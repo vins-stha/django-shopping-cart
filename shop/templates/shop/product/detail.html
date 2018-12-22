@@ -1,0 +1,50 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block title %}
+	{% if category %}{{ category.name }}{% else %}Products {% endif %}
+{% endblock %}
+{% block content %}
+	<div class = "container-fluid">
+		<div class="row" style = "margin-top:6%">
+			<div class="col-sm-8 blog-main">
+				<div class="blog-post">
+					<div class="row">
+						<div class="card">
+							<div class="card-body">
+								<div class="col-md-6 text-right">
+									<img src="{% if product.image %}{{ product.image.url }} {% else %}{% static 'images/default.jpg' %} {% endif %} alt="{{product.name}}
+									style="height:150px; width:auto">
+								</div>
+								<div class="col-md-6" style="padding-left:20px">
+									<h3>{{product.name}}</h3>
+									<h6><a href="{{product.category.get_absolute_url}}">{{ product.category}}</a></h6>
+									 <p class="text-muted">€. {{ product.price }}</p>
+									 <p> {{ product.description}}</p>
+									 <form action ="{% url 'addToCart' product.id %}" method = "post">
+									{% csrf_token %}
+										<p><button type="submit" class="btn btn-default">Add to Cart</button></p>
+										<h1>{{text}}</h1>
+									 </form>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+				<div class="sidebar-module">
+					<h4>Categories</h4>
+					<ol class="list-unstyled">
+						<li {% if not category %} class="active" {% endif %}>
+							<a href="{% url 'product_list' %}">All</a>
+						</li>
+						{% for c in categories %}
+						<li {% if category.slug == c.slug %} class="active" {% endif %}><a href="{{ c.get_absolute_url}}">{{c.name}}</a></li>
+						{% endfor %}
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
